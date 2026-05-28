@@ -23,6 +23,19 @@ export function Dropdown<T extends DropdownOption | string | number>({
   labelClassName,
   className = 'h-8 text-sm w-full',
 }: DropdownProps<T>) {
+  const selectedOption = options.find((opt) => {
+    if (typeof opt === 'string' || typeof opt === 'number') {
+      return String(opt) === value;
+    }
+    return (opt as DropdownOption).value === value;
+  });
+
+  const displayLabel = selectedOption
+    ? typeof selectedOption === 'string' || typeof selectedOption === 'number'
+      ? String(selectedOption)
+      : (selectedOption as DropdownOption).label
+    : value;
+
   return (
     <div className={cn('space-y-1', containerClassName)}>
       {label && (
@@ -33,14 +46,14 @@ export function Dropdown<T extends DropdownOption | string | number>({
 
       <Select id={label} value={value} onValueChange={onChange}>
         <SelectTrigger className={cn(className)}>
-          <SelectValue />
+          <SelectValue>{displayLabel}</SelectValue>
         </SelectTrigger>
         <SelectContent>
           {options.map((option, idx) => {
             const isPrimitive = typeof option === 'string' || typeof option === 'number';
 
-            const optValue = isPrimitive ? String(option) : option.value;
-            const optLabel = isPrimitive ? String(option) : option.label;
+            const optValue = isPrimitive ? String(option) : (option as DropdownOption).value;
+            const optLabel = isPrimitive ? String(option) : (option as DropdownOption).label;
 
             return (
               <SelectItem key={`${optValue}-${idx}`} value={optValue}>

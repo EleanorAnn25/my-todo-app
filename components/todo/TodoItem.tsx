@@ -1,3 +1,5 @@
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { format, isPast, isToday, parseISO } from 'date-fns';
 import { CalendarDays, ChevronDown, ChevronUp, GripVertical, Pencil, Trash } from 'lucide-react';
 import { useState } from 'react';
@@ -14,10 +16,22 @@ interface TodoItemProps {
   onToggle: (id: string) => void;
   onEdit: (todo: Todo) => void;
   onDelete: (id: string) => void;
+  isDraggable?: boolean;
 }
 
-export function TodoItem({ todo, onToggle, onEdit, onDelete }: TodoItemProps) {
+export function TodoItem({ todo, onToggle, onEdit, onDelete, isDraggable = true }: TodoItemProps) {
   const [expanded, setExpanded] = useState(false);
+
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: todo.id,
+    disabled: !isDraggable,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 30 : undefined,
+  };
 
   const isOverdue =
     !todo.completed &&
@@ -26,24 +40,32 @@ export function TodoItem({ todo, onToggle, onEdit, onDelete }: TodoItemProps) {
     !isToday(parseISO(todo.dueDate));
 
   const isDueToday = todo.dueDate && isToday(parseISO(todo.dueDate));
+
   return (
     <div
+      ref={setNodeRef}
+      style={style}
       className={cn(
         'group flex items-start gap-2 sm:gap-3 border-b border-neutral-100 py-3 px-3 sm:px-4 bg-white transition-all',
-        todo.completed && 'bg-neutral-50/60'
+        todo.completed && 'bg-neutral-50/60',
+        isDragging && 'shadow-lg border-neutral-200 opacity-80 cursor-grabbing relative z-30'
       )}
     >
       {/* Drag Handle */}
-      <button
-        type="button"
-        className="mt-0.5 cursor-grab active:cursor-grabbing text-neutral-300 hover:text-neutral-500 shrink-0 touch-none p-0.5 -ml-0.5"
-        aria-label="Drag to reorder"
-      >
-        <GripVertical size={16} />
-      </button>
+      {isDraggable && (
+        <button
+          type="button"
+          {...attributes}
+          {...listeners}
+          className="mt-0.5 cursor-grab active:cursor-grabbing text-neutral-300 hover:text-neutral-500 shrink-0 touch-none p-0.5 -ml-0.5"
+          aria-label="Drag to reorder"
+        >
+          <GripVertical size={16} />
+        </button>
+      )}
 
       {/* Checkbox */}
-      <div className="mt-0 5 shrink-0">
+      <div className={cn("mt-0.5 shrink-0", !isDraggable && "ml-1")}>
         <Checkbox
           checked={todo.completed}
           onCheckedChange={() => onToggle(todo.id)}

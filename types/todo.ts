@@ -1,5 +1,7 @@
 import { ReactNode } from 'react';
 
+export type View = 'list' | 'calendar';
+
 export type Category = 'Work' | 'Personal' | 'Urgent' | 'Other';
 
 export type SortOrder = 'asc' | 'desc' | 'none';

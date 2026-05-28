@@ -1,4 +1,4 @@
-import { nanoid } from 'nanoid';
+﻿import { nanoid } from 'nanoid';
 import { useCallback } from 'react';
 
 import { Todo, TodoFilters } from '@/types/todo';
@@ -42,6 +42,50 @@ export function useTodos() {
   const toggleTodo = useCallback(
     (id: string) => {
       setTodos((prev) => prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)));
+    },
+    [setTodos]
+  );
+
+  const reorderTodos = useCallback(
+    (orderedIds: string[]) => {
+      setTodos((prev) => {
+        const reorderedIdsSet = new Set(orderedIds);
+        const reorderedItems = prev.filter((t) => reorderedIdsSet.has(t.id));
+
+        if (reorderedItems.length === 0) return prev;
+
+        const originalOrders = reorderedItems.map((t) => t.order).sort((a, b) => a - b);
+
+        const idToNewOrder = new Map<string, number>();
+        orderedIds.forEach((id, index) => {
+          if (index < originalOrders.length) {
+            idToNewOrder.set(id, originalOrders[index]);
+          }
+        });
+
+        return prev.map((t) => {
+          if (idToNewOrder.has(t.id)) {
+            return { ...t, order: idToNewOrder.get(t.id)! };
+          }
+          return t;
+        });
+      });
+    },
+    [setTodos]
+  );
+
+  const importTodos = useCallback(
+    (newTodos: Omit<Todo, 'id' | 'createdAt' | 'updatedAt' | 'order'>[]) => {
+      const now = new Date().toISOString();
+      const imported: Todo[] = newTodos.map((t, idx) => ({
+        ...t,
+        id: nanoid(),
+        createdAt: now,
+        updatedAt: now,
+        order: Date.now() + idx,
+      }));
+
+      setTodos((prev) => [...prev, ...imported]);
     },
     [setTodos]
   );
@@ -97,6 +141,8 @@ export function useTodos() {
     updateTodo,
     deleteTodo,
     toggleTodo,
+    reorderTodos,
+    importTodos,
     filterAndSortTodos,
   };
 }

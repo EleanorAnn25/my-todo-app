@@ -34,29 +34,25 @@ export function PaginationControls({
   );
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-4 border-t border-neutral-100">
-      <div className="flex items-center gap-2 text-xs text-neutral-500">
-        <span className="hidden sm:inline">Row per page:</span>
-
-        <Dropdown
-          value={String(itemsPerPage)}
-          onChange={(v) => {
-            onItemsPerPageChange(Number(v));
-            onPageChange(1);
-          }}
-          options={ITEMS_PER_PAGE_OPTIONS}
-          className="w-16 h-7 text-xs"
-        />
-
-        <span className="text-neutral-400 tabular-nums">
-          {startItem}-{endItem} of {totalItems}
-        </span>
+    <div>
+      <div className="flex justify-end pt-2 text-2xs text-neutral-400 text-center tabular-nums">
+        Showing {startItem}-{endItem} of {totalItems} task{totalItems > 1 ? 's' : ''}
       </div>
 
-      <div className="flex items-center gap-3 self-end sm:self-auto">
-        <span className="text-xs text-neutral-500 font-medium tabular-nums select-none">
-          Page <span>{currentPage}</span> of <span>{totalPages}</span>
-        </span>
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4">
+        <div className="flex items-center gap-2 text-xs text-neutral-500">
+          <span>Show</span>
+          <Dropdown
+            value={String(itemsPerPage)}
+            onChange={(v) => {
+              onItemsPerPageChange(Number(v));
+              onPageChange(1);
+            }}
+            options={ITEMS_PER_PAGE_OPTIONS}
+            className="w-16 h-7 text-xs"
+          />
+          <span>per page</span>
+        </div>
 
         <div className="flex items-center gap-1">
           <Button
@@ -98,6 +94,10 @@ export function PaginationControls({
           >
             <ChevronRight size={14} />
           </Button>
+        </div>
+
+        <div className="text-xs text-neutral-500 font-medium tabular-nums select-none">
+          Page <span>{currentPage}</span> of <span>{totalPages}</span>
         </div>
       </div>
     </div>

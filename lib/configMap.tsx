@@ -26,7 +26,7 @@ export const DEFAULT_FILTERS: TodoFilters = {
 export const STATUS_OPTIONS: DropdownOption[] = [
   { value: 'all', label: 'All tasks' },
   { value: 'incomplete', label: 'Incomplete' },
-  { value: 'completed', label: 'completed' },
+  { value: 'completed', label: 'Completed' },
 ];
 
 export const SORT_OPTIONS: DropdownOption[] = [
@@ -36,7 +36,7 @@ export const SORT_OPTIONS: DropdownOption[] = [
 ];
 
 export const CATEGORY_OPTIONS: DropdownOption[] = [
-  { value: 'all', label: 'All' },
+  { value: 'all', label: 'All categories' },
   ...CATEGORIES.map((cat) => ({
     value: cat,
     label: (
