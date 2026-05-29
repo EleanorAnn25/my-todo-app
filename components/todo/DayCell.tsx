@@ -9,8 +9,8 @@ interface DayCellProps {
   todos: Todo[];
   isCurrentMonth: boolean;
   compact?: boolean;
-  onTaskClick: (todo: Todo, dateLabel: string) => void;
-  onDayClick: (todos: Todo[], dateLabel: string) => void;
+  onTaskClick: (todoId: string, dateLabel: string, dateStr: string) => void;
+  onDayClick: (dateLabel: string, dateStr: string) => void;
 }
 
 export function DayCell({
@@ -26,6 +26,7 @@ export function DayCell({
   const visible = todos.slice(0, maxVisible);
   const hiddenCount = todos.length - maxVisible;
   const dateLabel = format(date, 'MMMM d, yyyy');
+  const dateStr = format(date, 'yyyy-MM-dd');
 
   return (
     <div
@@ -55,7 +56,7 @@ export function DayCell({
           {visible.map((todo) => (
             <button
               key={todo.id}
-              onClick={() => onTaskClick(todo, dateLabel)}
+              onClick={() => onTaskClick(todo.id, dateLabel, dateStr)}
               className={cn(
                 'w-full text-left text-2xs px-1.5 py-0.5 leading-tight truncate transition-opacity hover:opacity-80 active:opacity-60',
                 todo.completed && 'opacity-50 line-through'
@@ -73,7 +74,7 @@ export function DayCell({
 
           {hiddenCount > 0 && (
             <button
-              onClick={() => onDayClick(todos, dateLabel)}
+              onClick={() => onDayClick(dateLabel, dateStr)}
               className="text-2xs text-neutral-400 hover:text-neutral-700 pl-1 transition-colors"
             >
               +{hiddenCount} more
@@ -85,7 +86,7 @@ export function DayCell({
       {/* Mobile (dot indicators) */}
       {compact && todos.length > 0 && (
         <button
-          onClick={() => onDayClick(todos, dateLabel)}
+          onClick={() => onDayClick(dateLabel, dateStr)}
           className="w-full flex flex-wrap gap-0.5 mt-0.5 justify-center"
           aria-label={`${todos.length} task${todos.length !== 1 ? 's' : ''} on ${dateLabel}`}
         >

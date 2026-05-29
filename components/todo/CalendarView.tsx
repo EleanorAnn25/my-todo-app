@@ -11,7 +11,7 @@ import {
   subMonths,
 } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { CATEGORIES, CATEGORY_COLORS, WEEKDAYS_FULL, WEEKDAYS_SHORT } from '@/lib/configMap';
 import { Todo } from '@/types/todo';
@@ -21,8 +21,9 @@ import { DayCell } from './DayCell';
 import { TaskDetailSheet } from './TaskDetailSheet';
 
 interface SheetState {
-  tasks: Todo[];
+  dateStr: string;
   dateLabel: string;
+  singleTodoId?: string;
 }
 
 interface CalendarViewProps {
@@ -44,12 +45,12 @@ export function CalendarView({ todosByDate, onEdit, onDelete, onToggle }: Calend
   const paddedDays: (Date | null)[] = [...Array(startPadding).fill(null), ...days];
   while (paddedDays.length % 7 !== 0) paddedDays.push(null);
 
-  const handleTaskClick = (todo: Todo, dateLabel: string) => {
-    setSheet({ tasks: [todo], dateLabel });
+  const handleTaskClick = (todoId: string, dateLabel: string, dateStr: string) => {
+    setSheet({ dateStr, dateLabel, singleTodoId: todoId });
   };
 
-  const handleDayClick = (tasks: Todo[], dateLabel: string) => {
-    setSheet({ tasks, dateLabel });
+  const handleDayClick = (dateLabel: string, dateStr: string) => {
+    setSheet({ dateStr, dateLabel });
   };
 
   const handleDelete = (id: string) => {
@@ -59,12 +60,21 @@ export function CalendarView({ todosByDate, onEdit, onDelete, onToggle }: Calend
     if (!hasConfirmed) return;
 
     onDelete(id);
-    setSheet((prev) => {
-      if (!prev) return null;
-      const remaining = prev.tasks.filter((t) => t.id !== id);
-      return remaining.length > 0 ? { ...prev, tasks: remaining } : null;
-    });
   };
+
+  const sheetTasks = useMemo(() => {
+    if (!sheet) return [];
+    const dayTasks = todosByDate.get(sheet.dateStr) ?? [];
+    if (sheet.singleTodoId) {
+      const todo = dayTasks.find((t) => t.id === sheet.singleTodoId);
+      return todo ? [todo] : [];
+    }
+    return dayTasks;
+  }, [sheet, todosByDate]);
+
+  if (sheet && sheetTasks.length === 0) {
+    setSheet(null);
+  }
 
   return (
     <div>
@@ -201,9 +211,9 @@ export function CalendarView({ todosByDate, onEdit, onDelete, onToggle }: Calend
       </div>
 
       {/* Task Detail Sheet */}
-      {sheet && (
+      {sheet && sheetTasks.length > 0 && (
         <TaskDetailSheet
-          tasks={sheet.tasks}
+          tasks={sheetTasks}
           dateLabel={sheet.dateLabel}
           onClose={() => setSheet(null)}
           onEdit={onEdit}
