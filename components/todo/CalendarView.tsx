@@ -57,11 +57,6 @@ export function CalendarView({ todosByDate, onEdit, onDelete, onToggle }: Calend
   };
 
   const handleDelete = (id: string) => {
-    const hasConfirmed = window.confirm(
-      'Are you sure you want to delete this task? This action cannot be undone.'
-    );
-    if (!hasConfirmed) return;
-
     onDelete(id);
   };
 

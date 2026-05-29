@@ -11,6 +11,7 @@ import { Todo } from '@/types/todo';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { CategoryBadge } from './CategoryBadge';
+import { TodoDeleteDialog } from './TodoDeleteDialog';
 
 interface TodoItemProps {
   todo: Todo;
@@ -22,6 +23,7 @@ interface TodoItemProps {
 
 export function TodoItem({ todo, onToggle, onEdit, onDelete, isDraggable = true }: TodoItemProps) {
   const [expanded, setExpanded] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: todo.id,
@@ -148,12 +150,21 @@ export function TodoItem({ todo, onToggle, onEdit, onDelete, isDraggable = true 
           variant="ghost"
           size="icon"
           className="w-8 h-8 sm:w-7 sm:h-7 hover:bg-rose-50 hover:text-rose-400"
-          onClick={() => onDelete(todo.id)}
+          onClick={() => setDeleteDialogOpen(true)}
           aria-label="Delete task"
         >
           <Trash size={14} />
         </Button>
       </div>
+
+      <TodoDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        todo={todo}
+        onConfirm={() => {
+          onDelete(todo.id);
+        }}
+      />
     </div>
   );
 }

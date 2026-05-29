@@ -1,5 +1,6 @@
 import { format, parseISO } from 'date-fns';
 import { CalendarDays, Pencil, Trash } from 'lucide-react';
+import { useState } from 'react';
 
 import { cn } from '@/lib/utils';
 import { Todo } from '@/types/todo';
@@ -8,6 +9,7 @@ import { checkIsDueToday, checkIsOverdue } from '@/lib/dateUtils';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { CategoryBadge } from './CategoryBadge';
+import { TodoDeleteDialog } from './TodoDeleteDialog';
 
 interface TaskRowProps {
   todo: Todo;
@@ -20,6 +22,8 @@ interface TaskRowProps {
 export function TaskRow({ todo, onEdit, onDelete, onToggle, onClose }: TaskRowProps) {
   const isOverdue = checkIsOverdue(todo);
   const isDueToday = checkIsDueToday(todo);
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   return (
     <div className="py-3 border-b border-neutral-100 last:border-0">
@@ -84,13 +88,22 @@ export function TaskRow({ todo, onEdit, onDelete, onToggle, onClose }: TaskRowPr
             variant="ghost"
             size="icon"
             className="h-7 w-7 hover:bg-red-50 hover:text-red-600"
-            onClick={() => onDelete(todo.id)}
+            onClick={() => setDeleteDialogOpen(true)}
             aria-label="Delete task"
           >
             <Trash size={14} />
           </Button>
         </div>
       </div>
+
+      <TodoDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        todo={todo}
+        onConfirm={() => {
+          onDelete(todo.id);
+        }}
+      />
     </div>
   );
 }
