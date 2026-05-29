@@ -1,9 +1,10 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { format, isPast, isToday, parseISO } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { CalendarDays, ChevronDown, ChevronUp, GripVertical, Pencil, Trash } from 'lucide-react';
 import { useState } from 'react';
 
+import { checkIsDueToday, checkIsOverdue } from '@/lib/dateUtils';
 import { cn } from '@/lib/utils';
 import { Todo } from '@/types/todo';
 
@@ -33,13 +34,8 @@ export function TodoItem({ todo, onToggle, onEdit, onDelete, isDraggable = true 
     zIndex: isDragging ? 30 : undefined,
   };
 
-  const isOverdue =
-    !todo.completed &&
-    todo.dueDate &&
-    isPast(parseISO(todo.dueDate)) &&
-    !isToday(parseISO(todo.dueDate));
-
-  const isDueToday = todo.dueDate && isToday(parseISO(todo.dueDate));
+  const isOverdue = checkIsOverdue(todo);
+  const isDueToday = checkIsDueToday(todo);
 
   return (
     <div
@@ -65,7 +61,7 @@ export function TodoItem({ todo, onToggle, onEdit, onDelete, isDraggable = true 
       )}
 
       {/* Checkbox */}
-      <div className={cn("mt-0.5 shrink-0", !isDraggable && "ml-1")}>
+      <div className={cn('mt-0.5 shrink-0', !isDraggable && 'ml-1')}>
         <Checkbox
           checked={todo.completed}
           onCheckedChange={() => onToggle(todo.id)}
@@ -94,7 +90,7 @@ export function TodoItem({ todo, onToggle, onEdit, onDelete, isDraggable = true 
             className={cn(
               'flex items-center gap-1 mt-1 text-xs',
               isOverdue && 'text-rose-400',
-              isDueToday && !isOverdue && 'text-amber-200',
+              isDueToday && !isOverdue && 'text-amber-400',
               !isOverdue && !isDueToday && 'text-neutral-400'
             )}
           >

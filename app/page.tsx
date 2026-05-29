@@ -9,6 +9,7 @@ import { Todo, TodoFilters, TodoFormData, View } from '@/types/todo';
 import { DesktopNav } from '@/components/layout/DesktopNav';
 import { MobileNav } from '@/components/layout/MobileNav';
 import { Loading } from '@/components/shared/Loading';
+import { CalendarView } from '@/components/todo/CalendarView';
 import { FilterToolbar } from '@/components/todo/FilterToolbar';
 import { PaginationControls } from '@/components/todo/PaginationControls';
 import { TodoFormDialog } from '@/components/todo/TodoFormDialog';
@@ -25,6 +26,7 @@ export default function Home() {
     reorderTodos,
     importTodos,
     filterAndSortTodos,
+    todosByDate,
   } = useTodos();
 
   const [view, setView] = useState<View>('list');
@@ -113,59 +115,70 @@ export default function Home() {
       </header>
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 pb-28">
-        <div className="bg-white rounded-xl border border-neutral-100">
-          <div className="border-b border-neutral-100">
-            <FilterToolbar
-              filters={filters}
-              onChange={handleFiltersChange}
-              hasActiveFilters={hasActiveFilters}
-              onImport={importTodos}
-              todos={todos}
-            />
-          </div>
-
-          {/* Active Filter Notice */}
-          {hasActiveFilters && (
-            <div className="px-4 py-2 bg-neutral-50 border-b border-neutral-100">
-              <p className="text-xs text-neutral-500">
-                {filteredTodos.length} task{filteredTodos.length !== 1 ? 's' : ''} match your
-                filters
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleFiltersChange(DEFAULT_FILTERS);
-                    closeDialog();
-                  }}
-                  className="ml-2 text-neutral-800 underline underline-offset-2 hover:no-underline"
-                >
-                  Clear
-                </button>
-              </p>
-            </div>
-          )}
-
-          {/* List */}
-          <TodoList
-            todos={paginatedTodos}
-            onReorder={reorderTodos}
-            onToggle={toggleTodo}
-            onEdit={openEditDialog}
-            onDelete={deleteTodo}
-            isReorderEnabled={filters.sortOrder === 'none'}
-          />
-
-          {/* Pagination */}
-          {filteredTodos.length > 0 && (
-            <div className="px-4 pb-4">
-              <PaginationControls
-                pagination={pagination}
-                totalItems={filteredTodos.length}
-                onPageChange={(p) => setPagination((prev) => ({ ...prev, currentPage: p }))}
-                onItemsPerPageChange={(n) => setPagination({ currentPage: 1, itemsPerPage: n })}
+        {view === 'list' ? (
+          <div className="bg-white rounded-xl border border-neutral-100">
+            <div className="border-b border-neutral-100">
+              <FilterToolbar
+                filters={filters}
+                onChange={handleFiltersChange}
+                hasActiveFilters={hasActiveFilters}
+                onImport={importTodos}
+                todos={todos}
               />
             </div>
-          )}
-        </div>
+
+            {/* Active Filter Notice */}
+            {hasActiveFilters && (
+              <div className="px-4 py-2 bg-neutral-50 border-b border-neutral-100">
+                <p className="text-xs text-neutral-500">
+                  {filteredTodos.length} task{filteredTodos.length !== 1 ? 's' : ''} match your
+                  filters
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleFiltersChange(DEFAULT_FILTERS);
+                      closeDialog();
+                    }}
+                    className="ml-2 text-neutral-800 underline underline-offset-2 hover:no-underline"
+                  >
+                    Clear
+                  </button>
+                </p>
+              </div>
+            )}
+
+            {/* List */}
+            <TodoList
+              todos={paginatedTodos}
+              onReorder={reorderTodos}
+              onToggle={toggleTodo}
+              onEdit={openEditDialog}
+              onDelete={deleteTodo}
+              isReorderEnabled={filters.sortOrder === 'none'}
+            />
+
+            {/* Pagination */}
+            {filteredTodos.length > 0 && (
+              <div className="px-4 pb-4">
+                <PaginationControls
+                  pagination={pagination}
+                  totalItems={filteredTodos.length}
+                  onPageChange={(p) => setPagination((prev) => ({ ...prev, currentPage: p }))}
+                  onItemsPerPageChange={(n) => setPagination({ currentPage: 1, itemsPerPage: n })}
+                />
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="bg-white rounded-xl border border-neutral-100 p-4 sm:p-6">
+            <CalendarView
+              todosByDate={todosByDate}
+              onEdit={openEditDialog}
+              onDelete={deleteTodo}
+              onToggle={toggleTodo}
+            />
+          </div>
+        )}
       </main>
 
       <MobileNav view={view} setView={setView} onAdd={openAddDialog} />

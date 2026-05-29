@@ -57,3 +57,7 @@ export const DEFAULT_PAGINATION: PaginationState = {
 };
 
 export const ITEMS_PER_PAGE_OPTIONS = [5, 10, 15, 20] as const;
+
+export const WEEKDAYS_FULL = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+export const WEEKDAYS_SHORT = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];

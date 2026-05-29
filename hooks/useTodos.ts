@@ -1,5 +1,5 @@
 ﻿import { nanoid } from 'nanoid';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { Todo, TodoFilters } from '@/types/todo';
 import { STORAGE_KEY, useLocalStorage } from './useLocalStorage';
@@ -134,6 +134,17 @@ export function useTodos() {
     [todos]
   );
 
+  const todosByDate = useMemo(() => {
+    const map = new Map<string, Todo[]>();
+    todos.forEach((t) => {
+      if (t.dueDate) {
+        const existing = map.get(t.dueDate) ?? [];
+        map.set(t.dueDate, [...existing, t]);
+      }
+    });
+    return map;
+  }, [todos]);
+
   return {
     todos,
     isLoaded,
@@ -144,5 +155,6 @@ export function useTodos() {
     reorderTodos,
     importTodos,
     filterAndSortTodos,
+    todosByDate,
   };
 }
