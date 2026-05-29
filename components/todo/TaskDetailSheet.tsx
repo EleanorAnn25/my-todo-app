@@ -93,7 +93,7 @@ export function TaskDetailSheet({
         className={cn(
           'fixed z-50 bg-white shadow-xl',
           // Mobile (bottom sheet)
-          'bottom-0 left-0 right-0 rounded-t-xl',
+          'bottom-0 left-0 right-0 rounded-t-xl pb-safe',
           // Desktop (when anchored dynamically)
           position && 'sm:bottom-auto sm:left-auto sm:right-auto sm:rounded-xl sm:w-80 h-auto',
           // Desktop (centered fallback)

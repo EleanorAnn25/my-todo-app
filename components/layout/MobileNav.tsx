@@ -1,4 +1,4 @@
-﻿import { CalendarDays, ListTodo, Plus } from 'lucide-react';
+import { CalendarDays, ListTodo, Plus } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { View } from '@/types/todo';
@@ -14,8 +14,7 @@ interface MobileNavProps {
 export function MobileNav({ view, setView, onAdd }: MobileNavProps) {
   return (
     <nav
-      className="sm:hidden fixed bottom-0 left-0 right-0 z-30 bg-background/80 backdrop-blur-lg border-t border-border shadow-[0_-2px_10px_rgba(0,0,0,0.05)]"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      className="sm:hidden fixed bottom-0 left-0 right-0 z-30 bg-background/80 backdrop-blur-lg border-t border-border shadow-[0_-2px_10px_rgba(0,0,0,0.05)] pb-safe"
     >
       <div className="flex items-center h-16 px-6">
         <button
