@@ -3,17 +3,17 @@ import { Category, DropdownOption, PaginationState, TodoFilters } from '@/types/
 export const CATEGORIES: Category[] = ['Work', 'Personal', 'Urgent', 'Other'];
 
 export const CATEGORY_COLORS: Record<Category, string> = {
-  Work: '#8B9B8E',
-  Personal: '#9B8FA0',
-  Urgent: '#B08A7A',
-  Other: '#8A9AAF',
+  Work: '#005F56',
+  Personal: '#5A189A',
+  Urgent: '#B7094C',
+  Other: '#4A5560',
 };
 
 export const CATEGORY_LIGHT_COLORS: Record<Category, string> = {
-  Work: '#E8EDE9',
-  Personal: '#EDE8EF',
-  Urgent: '#EFE6E2',
-  Other: '#E5E9EE',
+  Work: '#E6F2F0',
+  Personal: '#F3EBF7',
+  Urgent: '#F9E6EE',
+  Other: '#F0F2F5',
 };
 
 export const DEFAULT_FILTERS: TodoFilters = {

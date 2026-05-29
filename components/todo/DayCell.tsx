@@ -1,4 +1,5 @@
 import { format, isToday } from 'date-fns';
+import { MouseEvent } from 'react';
 
 import { CATEGORY_COLORS } from '@/lib/configMap';
 import { cn } from '@/lib/utils';
@@ -9,8 +10,8 @@ interface DayCellProps {
   todos: Todo[];
   isCurrentMonth: boolean;
   compact?: boolean;
-  onTaskClick: (todoId: string, dateLabel: string, dateStr: string) => void;
-  onDayClick: (dateLabel: string, dateStr: string) => void;
+  onTaskClick: (todoId: string, dateLabel: string, dateStr: string, e: MouseEvent) => void;
+  onDayClick: (dateLabel: string, dateStr: string, e: MouseEvent) => void;
 }
 
 export function DayCell({
@@ -56,7 +57,7 @@ export function DayCell({
           {visible.map((todo) => (
             <button
               key={todo.id}
-              onClick={() => onTaskClick(todo.id, dateLabel, dateStr)}
+              onClick={(e) => onTaskClick(todo.id, dateLabel, dateStr, e)}
               className={cn(
                 'w-full text-left text-2xs px-1.5 py-0.5 leading-tight truncate transition-opacity hover:opacity-80 active:opacity-60',
                 todo.completed && 'opacity-50 line-through'
@@ -74,7 +75,7 @@ export function DayCell({
 
           {hiddenCount > 0 && (
             <button
-              onClick={() => onDayClick(dateLabel, dateStr)}
+              onClick={(e) => onDayClick(dateLabel, dateStr, e)}
               className="text-2xs text-neutral-400 hover:text-neutral-700 pl-1 transition-colors"
             >
               +{hiddenCount} more
@@ -86,7 +87,7 @@ export function DayCell({
       {/* Mobile (dot indicators) */}
       {compact && todos.length > 0 && (
         <button
-          onClick={() => onDayClick(dateLabel, dateStr)}
+          onClick={(e) => onDayClick(dateLabel, dateStr, e)}
           className="w-full flex flex-wrap gap-0.5 mt-0.5 justify-center"
           aria-label={`${todos.length} task${todos.length !== 1 ? 's' : ''} on ${dateLabel}`}
         >

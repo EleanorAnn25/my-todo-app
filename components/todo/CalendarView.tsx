@@ -11,7 +11,7 @@ import {
   subMonths,
 } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { MouseEvent, useMemo, useState } from 'react';
 
 import { CATEGORIES, CATEGORY_COLORS, WEEKDAYS_FULL, WEEKDAYS_SHORT } from '@/lib/configMap';
 import { Todo } from '@/types/todo';
@@ -24,6 +24,7 @@ interface SheetState {
   dateStr: string;
   dateLabel: string;
   singleTodoId?: string;
+  anchorRect?: DOMRect;
 }
 
 interface CalendarViewProps {
@@ -45,12 +46,14 @@ export function CalendarView({ todosByDate, onEdit, onDelete, onToggle }: Calend
   const paddedDays: (Date | null)[] = [...Array(startPadding).fill(null), ...days];
   while (paddedDays.length % 7 !== 0) paddedDays.push(null);
 
-  const handleTaskClick = (todoId: string, dateLabel: string, dateStr: string) => {
-    setSheet({ dateStr, dateLabel, singleTodoId: todoId });
+  const handleTaskClick = (todoId: string, dateLabel: string, dateStr: string, e: MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setSheet({ dateStr, dateLabel, singleTodoId: todoId, anchorRect: rect });
   };
 
-  const handleDayClick = (dateLabel: string, dateStr: string) => {
-    setSheet({ dateStr, dateLabel });
+  const handleDayClick = (dateLabel: string, dateStr: string, e: MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setSheet({ dateStr, dateLabel, anchorRect: rect });
   };
 
   const handleDelete = (id: string) => {
@@ -215,6 +218,7 @@ export function CalendarView({ todosByDate, onEdit, onDelete, onToggle }: Calend
         <TaskDetailSheet
           tasks={sheetTasks}
           dateLabel={sheet.dateLabel}
+          anchorRect={sheet.anchorRect}
           onClose={() => setSheet(null)}
           onEdit={onEdit}
           onDelete={handleDelete}
