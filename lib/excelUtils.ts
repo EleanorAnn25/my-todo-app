@@ -82,3 +82,27 @@ export function exportToExcel(todos: Todo[]) {
   ws['!cols'] = [{ wch: 30 }, { wch: 40 }, { wch: 12 }, { wch: 14 }, { wch: 12 }, { wch: 14 }];
   XLSX.writeFile(wb, `tasks-${Date.now()}.xlsx`);
 }
+
+export function downloadTemplate() {
+  const data = [
+    {
+      Title: 'Example Task',
+      Description: 'An example description',
+      Category: 'Personal',
+      'Due Date': '2026-06-01',
+    },
+    {
+      Title: 'Example Task 2',
+      Description: 'Another example description',
+      Category: 'Other',
+      'Due Date': '2026-06-25',
+    },
+  ];
+
+  const ws = XLSX.utils.json_to_sheet(data);
+  const wb = XLSX.utils.book_new();
+
+  XLSX.utils.book_append_sheet(wb, ws, 'Template');
+  ws['!cols'] = [{ wch: 30 }, { wch: 40 }, { wch: 12 }, { wch: 14 }];
+  XLSX.writeFile(wb, `todo-template.xlsx`);
+}

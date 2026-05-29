@@ -125,7 +125,7 @@ export function TaskDetailSheet({
 
           <button
             onClick={onClose}
-            className="hidden sm:block text-neutral-400 hover:text-neutral-700 transition-colors p-1 -mr-1"
+            className="text-neutral-400 hover:text-neutral-700 transition-colors p-1 -mr-1"
             aria-label="Close"
           >
             <X className="h-4 w-4" />

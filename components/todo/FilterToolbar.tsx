@@ -9,6 +9,7 @@ import { Button } from '../ui/button';
 import { ExportButton } from './ExportButton';
 import { ImportButton } from './ImportButton';
 import { SearchInput } from './SearchInput';
+import { TemplateButton } from './TemplateButton';
 
 interface FilterToolbarProps {
   filters: TodoFilters;
@@ -53,28 +54,33 @@ export function FilterToolbar({
 
   return (
     <div>
-      <div className="flex items-center gap-2 px-4 py-2.5">
-        <SearchInput filters={filters} onChange={onChange} />
+      <div className="flex flex-col xs:flex-row xs:items-center gap-2 px-4 py-2.5">
+        <div className="w-full xs:flex-1">
+          <SearchInput filters={filters} onChange={onChange} />
+        </div>
 
-        <Button
-          variant={filterOpen || hasActiveFilters ? 'default' : 'outline'}
-          className="relative px-2 sm:px-3 h-8 sm:h-9"
-          onClick={() => setFilterOpen((open) => !open)}
-          aria-label="Toggle filters"
-        >
-          <SlidersHorizontal size={14} />
-          <span className="hidden sm:inline ml-2 text-sm">Filters</span>
+        <div className="flex items-center justify-between xs:justify-start gap-2 w-full xs:w-auto">
+          <Button
+            variant={filterOpen || hasActiveFilters ? 'default' : 'outline'}
+            className="relative px-3 h-8 sm:h-9 flex-1 xs:flex-none justify-center"
+            onClick={() => setFilterOpen((open) => !open)}
+            aria-label="Toggle filters"
+          >
+            <SlidersHorizontal size={14} />
+            <span className="inline xs:hidden sm:inline ml-2 text-sm">Filters</span>
 
-          {activeFilterCount > 0 && (
-            <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-neutral-400 text-white text-2xs font-bold flex items-center justify-center ring-1 ring-neutral-50">
-              {activeFilterCount}
-            </span>
-          )}
-        </Button>
+            {activeFilterCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-neutral-400 text-white text-2xs font-bold flex items-center justify-center ring-1 ring-neutral-50">
+                {activeFilterCount}
+              </span>
+            )}
+          </Button>
 
-        <div className="flex items-center gap-1 sm:gap-2 border-l border-neutral-100 pl-2 shrink-0">
-          <ImportButton onImport={onImport} showLabel className="h-8 sm:h-9" />
-          <ExportButton todos={todos} showLabel className="h-8 sm:h-9" />
+          <div className="flex items-center gap-1 xs:gap-0.5 shrink-0">
+            <TemplateButton showLabel className="h-8 sm:h-9" />
+            <ImportButton onImport={onImport} showLabel className="h-8 sm:h-9" />
+            <ExportButton todos={todos} showLabel className="h-8 sm:h-9" />
+          </div>
         </div>
       </div>
 

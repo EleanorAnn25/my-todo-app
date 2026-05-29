@@ -54,7 +54,7 @@ export function ImportButton({ className, onImport, showLabel }: ImportButtonPro
         aria-label="Import tasks"
       >
         <Upload size={16} />
-        {showLabel && <span className="hidden sm:inline ml-2 text-sm">Import</span>}
+        {showLabel && <span className="hidden lg:inline ml-2 text-sm">Import</span>}
       </Button>
     </>
   );

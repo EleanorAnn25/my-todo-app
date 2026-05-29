@@ -23,7 +23,7 @@ export function ExportButton({ className, todos, showLabel }: ExportButtonProps)
       aria-label="Export tasks"
     >
       <Download size={16} />
-      {showLabel && <span className="hidden sm:inline ml-2 text-sm">Export</span>}
+      {showLabel && <span className="hidden lg:inline ml-2 text-sm">Export</span>}
     </Button>
   );
 }
